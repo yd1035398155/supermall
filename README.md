@@ -1,3 +1,7 @@
+git add .
+git commit -m '注释'
+git push
+
 新项目步骤:
 一 划分目录结构
 二 CSS 文件的引入
