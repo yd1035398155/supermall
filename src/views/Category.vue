@@ -1,10 +1,10 @@
 <template>
-  <h2>首页3</h2>
+  <h2>分类</h2>
 </template>
 
 <script>
 export default {
-  name: "Home3"
+  name: "Category"
 };
 </script>
 
