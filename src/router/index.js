@@ -1,19 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-const Home = () => import("../views/Home");
+
 const Home1 = () => import("../views/Home1");
 const Home2 = () => import("../views/Home2");
 const Home3 = () => import("../views/Home3");
+const Home4 = () => import("../views/Home4");
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: "",
-  //   redirect: "/home"
-  // },
   {
-    path: "/home",
-    component: Home
+    path: "",
+    redirect: "/home1"
   },
   {
     path: "/home1",
@@ -26,6 +23,10 @@ const routes = [
   {
     path: "/home3",
     component: Home3
+  },
+  {
+    path: "/home4",
+    component: Home4
   }
 ];
 
