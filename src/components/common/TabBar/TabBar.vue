@@ -10,7 +10,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .tab-bar {
   display: flex;
   background-color: rgb(246, 246, 246);
@@ -22,5 +22,6 @@ export default {
   bottom: 0;
 
   box-shadow: 0 -3px 1px rgba(100, 100, 100, 0.3);
+  z-index: 10;
 }
 </style>
