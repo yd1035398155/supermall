@@ -7,6 +7,8 @@ git push
 二 CSS 文件的引入
 三 vue.config.js 和.editorconfig
 
+"better-scroll": "^1.15.2",
+
 # supermall
 
 ## Project setup

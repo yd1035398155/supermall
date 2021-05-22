@@ -1,5 +1,5 @@
 <template>
-  <div class="good_item">
+  <div class="good_item" @click="itemClick">
     <img :src="goodsItem.show.img" alt="" @load="imageLoad" />
     <div class="goods_info">
       <p>{{ goodsItem.title }}</p>
@@ -21,15 +21,19 @@ export default {
     }
   },
   methods: {
+    // 每张图片加载完毕时,执行函数,在home的created中接受
     imageLoad() {
       // 事件总线bus
-      this.$bus.emit("itemImageLoaded");
+      this.$bus.$emit("itemImageLoaded");
+    },
+    itemClick() {
+      this.$router.push("/detail/" + this.goodsItem.iid);
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
 .good_item {
   position: relative;
   padding-bottom: 40px;

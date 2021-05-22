@@ -35,22 +35,29 @@ export default {
       observeDOM: true
     });
     // 2.监听滚动位置
-    this.scroll.on("scroll", position => {
-      // console.log(position);
-      this.$emit("scroll", position);
-    });
+    if (this.probeType === 2 || this.probeType === 3) {
+      this.scroll.on("scroll", position => {
+        // console.log(position);
+        this.$emit("scroll", position);
+      });
+    }
     // 3.监听上拉事件
-    this.scroll.on("pullingUp", () => {
-      this.$emit("queryData");
-    });
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("queryData");
+      });
+    }
   },
   methods: {
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
     finishPullUp() {
       // 上拉加载更多只能触发一次,需要结束掉才能进行下一步
       this.scroll.finishPullUp();
+    },
+    refresh() {
+      this.scroll && this.scroll.refresh();
     }
   }
 };

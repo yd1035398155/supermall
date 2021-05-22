@@ -117,7 +117,6 @@ export default {
   },
   mounted() {
     // 操纵DOM元素
-    console.log(this.$refs.aaaa);
     // 第二个对象中可传参数:
     // probeType: 0或1不实时监听位置  2监听 3实时监听
     //better-scroll默认是不能监听点击事件的,设置:

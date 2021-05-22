@@ -1,6 +1,13 @@
 <template>
   <div id="home">
     <nav-bar class="home_nav"><div slot="center">购物街</div></nav-bar>
+    <tab-control
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      v-show="isTabFixed"
+      class="fixed"
+    />
     <scroll
       class="content"
       ref="scroll"
@@ -9,13 +16,13 @@
       @scroll="contentScroll"
       @queryData="queryData"
     >
-      <home-swiper :banners="banners" />
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-control
         :titles="['流行', '新款', '精选']"
-        class="tab_control"
         @tabClick="tabClick"
+        ref="tabControl2"
       />
       <!-- 显示商品 -->
       <goods-list :goods="showGoods" />
@@ -35,6 +42,7 @@ import FeatureView from "./childComps/FeatureView";
 import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/common/backtop/BackTop";
+import { debounce } from "common/utils";
 //业务组件
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
@@ -59,6 +67,10 @@ export default {
       recommends: [],
       currentType: "pop",
       isShowBackTop: false,
+      tabOffsetTop: 0,
+      isLoad: false,
+      isTabFixed: false,
+      saveY: 0,
       goods: {
         pop: { page: 0, list: [] },
         new: { page: 0, list: [] },
@@ -67,10 +79,26 @@ export default {
     };
   },
   created() {
+    // 1.请求多个数据
     this.getHomeMultidata();
+    // 2.请求商品数据
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  mounted() {
+    //1.监听img加载完成
+    const refresh = debounce(this.$refs.scroll.refresh, 500);
+    this.$bus.$on("itemImageLoaded", () => {
+      refresh();
+    });
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY);
+    this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.scroll.y;
   },
   computed: {
     showGoods() {
@@ -79,6 +107,7 @@ export default {
   },
   methods: {
     // =================事件监听
+
     tabClick(index) {
       switch (index) {
         case 0:
@@ -91,22 +120,30 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
     },
     queryData() {
       this.getHomeGoods(this.currentType);
-      // 由于图片加载是异步的,better-scroll在还没加载完图片时就固定了可滚动区域,
-      // refresh()重新计算可滚动区域
-      this.$refs.scroll.scroll.refresh();
+    },
+    swiperImageLoad() {
+      // 获取tabControl的offsetTop
+      // 注意:组件没有offsetTop等属性,而组件内的元素有
+      // 所有组件都有一个属性$el,用于获取组件中的元素
+      if (!this.isLoad) {
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+        this.isLoad = true;
+      }
     },
     // 监听滚动距离
     contentScroll(position) {
-      // 当滚动距离小于1000时，不显示BackTop按钮
+      // 1.判断是否显示BackTop按钮
       this.isShowBackTop = position.y < -1000;
-      // console.log(position);
-      // 当滚动到页面底部时加载更多商品4103
+      // 2.决定tabControl是否吸顶(position:fiex)
+      this.isTabFixed = position.y < -this.tabOffsetTop;
     },
     // =====================网络请求
     getHomeMultidata() {
@@ -125,9 +162,7 @@ export default {
         .then(res => {
           this.goods[type].list.push(...res.data.data.list);
           this.goods[type].page += 1;
-          setTimeout(() => {
-            this.$refs.scroll.finishPullUp();
-          }, 1000);
+          this.$refs.scroll.finishPullUp();
         })
         .catch(err => err);
     }
@@ -143,20 +178,15 @@ export default {
 }
 .home_nav {
   background-color: var(--color-tint);
-  text-align: center;
+
   color: #fff;
-  position: fixed;
+  /* position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 10; */
 }
-.tab_control {
-  position: sticky;
-  top: 43px;
-  background-color: #fff;
-  z-index: 9;
-}
+
 .content {
   position: absolute;
   overflow: hidden;
@@ -164,5 +194,9 @@ export default {
   bottom: 49px;
   left: 0;
   right: 0;
+}
+.fixed {
+  position: relative;
+  z-index: 9;
 }
 </style>

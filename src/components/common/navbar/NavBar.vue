@@ -12,9 +12,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .nav-bar {
   display: flex;
+  text-align: center;
   /* line-height可将div撑起来 */
   line-height: 44px;
   box-shadow: 0 1px 1px rgba(100, 100, 100, 0.1);
