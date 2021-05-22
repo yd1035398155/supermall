@@ -1,6 +1,9 @@
 <template>
   <div>
     <nav-bar>
+      <div slot="left" class="back" @click="backClick">
+        <img src="~assets/img/common/back.svg" alt="" />
+      </div>
       <div slot="center" class="title">
         <div
           v-for="(item, index) in titles"
@@ -17,6 +20,7 @@
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
+
 export default {
   name: "",
   components: {
@@ -33,6 +37,10 @@ export default {
   methods: {
     itemClick(index) {
       this.currentIndex = index;
+    },
+    backClick() {
+      this.$router.back();
+      // this.$router.go(-1);
     }
   }
 };
@@ -44,9 +52,12 @@ export default {
 }
 .title_item {
   flex: 1;
-  /* font-size: 12px; */
+  font-size: 12px;
 }
 .active {
   color: var(--color-high-text);
+}
+.back img {
+  margin-top: 12px;
 }
 </style>

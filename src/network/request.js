@@ -15,7 +15,7 @@ export function request(config) {
   );
   instance.interceptors.response.use(
     res => {
-      return res;
+      return res.data;
     },
     err => {
       console.log(err);

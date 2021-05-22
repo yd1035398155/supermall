@@ -149,8 +149,8 @@ export default {
     getHomeMultidata() {
       getHomeMultidata()
         .then(res => {
-          this.banners = res.data.data.banner.list;
-          this.recommends = res.data.data.recommend.list;
+          this.banners = res.data.banner.list;
+          this.recommends = res.data.recommend.list;
         })
         .catch(err => {
           console.log(err);
@@ -160,7 +160,7 @@ export default {
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page)
         .then(res => {
-          this.goods[type].list.push(...res.data.data.list);
+          this.goods[type].list.push(...res.data.list);
           this.goods[type].page += 1;
           this.$refs.scroll.finishPullUp();
         })
