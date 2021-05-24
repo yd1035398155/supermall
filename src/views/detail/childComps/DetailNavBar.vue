@@ -57,7 +57,10 @@ export default {
 .active {
   color: var(--color-high-text);
 }
+
 .back img {
-  margin-top: 12px;
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
 }
 </style>
