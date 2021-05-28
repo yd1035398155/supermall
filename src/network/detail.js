@@ -36,3 +36,20 @@ export class GoodsParam {
     this.sizes = rule.tables;
   }
 }
+export class Comment {
+  constructor(comment) {
+    this.username = comment.user.uname;
+    this.avatar = comment.user.avatar;
+    this.content = comment.content;
+    this.created = comment.created;
+    this.images = comment.images;
+    this.style = comment.style;
+  }
+}
+
+// 得到推荐的数据
+export function getRecommend() {
+  return request({
+    url: "/recommend"
+  });
+}

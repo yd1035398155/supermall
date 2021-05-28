@@ -42,7 +42,7 @@ import FeatureView from "./childComps/FeatureView";
 import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/common/backtop/BackTop";
-import { debounce } from "common/utils";
+import { itemListenerMixin } from "common/mixin";
 //业务组件
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
@@ -61,6 +61,7 @@ export default {
     Scroll,
     BackTop
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -86,13 +87,7 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  mounted() {
-    //1.监听img加载完成
-    const refresh = debounce(this.$refs.scroll.refresh, 500);
-    this.$bus.$on("itemImageLoaded", () => {
-      refresh();
-    });
-  },
+  mounted() {},
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY);
     this.$refs.scroll.refresh();
