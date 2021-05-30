@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     imageLoad() {
-      this.$emit("swiperImageLoad");
+      this.$emit("swiperLoad");
     }
   },
   components: {

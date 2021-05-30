@@ -16,9 +16,9 @@
       @scroll="contentScroll"
       @queryData="queryData"
     >
-      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
-      <recommend-view :recommends="recommends" />
-      <feature-view />
+      <home-swiper :banners="banners" @swiperLoad="swiperLoad" />
+      <recommend-view :recommends="recommends" @recommendLoad="recommendLoad" />
+      <feature-view @featureLoad="featureLoad" />
       <tab-control
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"
@@ -41,8 +41,8 @@ import FeatureView from "./childComps/FeatureView";
 // 公共组件
 import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/common/backtop/BackTop";
-import { itemListenerMixin } from "common/mixin";
+
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 //业务组件
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
@@ -58,17 +58,18 @@ export default {
     NavBar,
     TabControl,
     GoodsList,
-    Scroll,
-    BackTop
+    Scroll
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
       recommends: [],
       currentType: "pop",
-      isShowBackTop: false,
       tabOffsetTop: 0,
+      isSwiperLoad: false,
+      isRecommendLoad: false,
+      isFeatureLoad: false,
       isLoad: false,
       isTabFixed: false,
       saveY: 0,
@@ -118,26 +119,39 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
+
     queryData() {
       this.getHomeGoods(this.currentType);
     },
-    swiperImageLoad() {
-      // 获取tabControl的offsetTop
-      // 注意:组件没有offsetTop等属性,而组件内的元素有
-      // 所有组件都有一个属性$el,用于获取组件中的元素
-      if (!this.isLoad) {
+    // 全部组件内的图片加载完毕时,开始计算tabbar的offsetTop
+    isAllLoad() {
+      if (
+        this.isSwiperLoad &&
+        this.isRecommendLoad &&
+        this.isFeatureLoad &&
+        !this.isLoad
+      ) {
         this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
         this.isLoad = true;
       }
     },
+    swiperLoad() {
+      this.isSwiperLoad = true;
+      this.isAllLoad();
+    },
+    recommendLoad() {
+      this.isRecommendLoad = true;
+      this.isAllLoad();
+    },
+    featureLoad() {
+      this.isFeatureLoad = true;
+      this.isAllLoad();
+    },
     // 监听滚动距离
     contentScroll(position) {
       // 1.判断是否显示BackTop按钮
-      this.isShowBackTop = position.y < -1000;
-      // 2.决定tabControl是否吸顶(position:fiex)
+      this.ShowBackTop(position);
+      // 2.决定tabControl是否吸顶(position:flex)
       this.isTabFixed = position.y < -this.tabOffsetTop;
     },
     // =====================网络请求
