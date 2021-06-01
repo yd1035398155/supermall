@@ -7,7 +7,6 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
-      <div v-for="item in $store.state.carList">{{ item }}</div>
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
@@ -18,7 +17,6 @@
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
     <detail-bottom-bar @addToCart="addToCart" />
-    <!-- <DetailBottomBar /> -->
   </div>
 </template>
 
@@ -35,6 +33,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar";
 // 公共组件
 import Scroll from "components/common/scroll/Scroll";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
+import { mapActions } from "vuex";
 // 业务组件
 import GoodsList from "components/content/goods/GoodsList";
 // 网络请求和函数
@@ -136,6 +135,7 @@ export default {
   },
   mounted() {},
   methods: {
+    ...mapActions(["addCart"]),
     imgLoad() {
       this.getThemeTopY();
     },
@@ -169,7 +169,13 @@ export default {
       product.price = this.goods.realPrice;
       // 2.添加到购物车
       // this.$store.commit("addCart", product);
-      this.$store.dispatch("addCart", product);
+      // this.$store.dispatch("addCart", product).then(res => {
+      //   console.log(res);
+      // });
+      // 映射后,不用传递context,直接传payload
+      this.addCart(product).then(res => {
+        this.$toast.show(res, 2000);
+      });
     }
   }
 };

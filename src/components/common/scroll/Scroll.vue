@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    <div class="content">
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
   mounted() {
     // 1.创建滚动实例
     this.scroll = new BScroll(this.$refs.wrapper, {
-      // div上监听时，需要加上click:true
+      // better-scroll会阻止原生的监听,div上监听时，需要加上click:true
       click: true,
       pullUpLoad: this.pullUpLoad,
       probeType: this.probeType,
@@ -37,7 +37,6 @@ export default {
     // 2.监听滚动位置
     if (this.probeType === 2 || this.probeType === 3) {
       this.scroll.on("scroll", position => {
-        // console.log(position);
         this.$emit("scroll", position);
       });
     }
@@ -54,10 +53,13 @@ export default {
     },
     finishPullUp() {
       // 上拉加载更多只能触发一次,需要结束掉才能进行下一步
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
     },
     refresh() {
       this.scroll && this.scroll.refresh();
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
     }
   }
 };

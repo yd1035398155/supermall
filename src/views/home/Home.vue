@@ -12,7 +12,7 @@
       class="content"
       ref="scroll"
       :probe-type="3"
-      :pullUpLoad="true"
+      :pull-up-load="true"
       @scroll="contentScroll"
       @queryData="queryData"
     >
@@ -90,11 +90,12 @@ export default {
   },
   mounted() {},
   activated() {
-    this.$refs.scroll.scrollTo(0, this.saveY);
+    this.$refs.scroll.refresh();
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
     this.$refs.scroll.refresh();
   },
   deactivated() {
-    this.saveY = this.$refs.scroll.scroll.y;
+    this.saveY = this.$refs.scroll.getScrollY();
   },
   computed: {
     showGoods() {
@@ -103,7 +104,6 @@ export default {
   },
   methods: {
     // =================事件监听
-
     tabClick(index) {
       switch (index) {
         case 0:
@@ -119,7 +119,6 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-
     queryData() {
       this.getHomeGoods(this.currentType);
     },
@@ -187,7 +186,6 @@ export default {
 }
 .home_nav {
   background-color: var(--color-tint);
-
   color: #fff;
   /* position: fixed;
   top: 0;
