@@ -8,8 +8,8 @@ module.exports = {
       viewportUnit: "vw", // 指定需要转换成的视窗单位，建议使用vw
       selectorBlackList: ["ignore", "tab-bar"], // 指定不需要转换的类,或者在组件内加ignore
       minPixelValue: 1, // 小于或等于`1px`不转换为视窗单位.
-      mediaQuery: false, // 允许在媒体查询中转换`px`
-      exclude: [] //里面写正则表达式
+      mediaQuery: false // 允许在媒体查询中转换`px`
+      //exclude: [] //里面写正则表达式
     }
   }
 };
