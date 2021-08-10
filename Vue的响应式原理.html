@@ -13,7 +13,7 @@
 				2.当数据发生改变,Vue内部如何知道要通知哪些人,界面发生改变
 		-->
 	<div id="app">{{message}}</div>
-	<script src="./node_modules/vue/dist/vue.js"></script>
+	<!-- <script src="https://unpkg.com/vue@next"></script> -->
 	<script>
 		const obj = {
 			message: "哈哈哈",
@@ -32,8 +32,10 @@
 			});
 		});
 		// 发布者订阅者
+		// dependence 依赖
 		class Dep {
 			constructor() {
+				// 维护订阅者列表
 				this.subs = []
 			}
 			addSub(watcher) {
@@ -67,7 +69,9 @@
 		const app = new Vue({
 			el: "#app",
 			data: {
-				message: "很爱很爱你"
+				message: "很爱很爱你",
+				name: "杨东",
+				age: 18
 			}
 		});
 	</script>
